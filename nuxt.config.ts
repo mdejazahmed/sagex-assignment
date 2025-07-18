@@ -1,6 +1,10 @@
 
 import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
 export default defineNuxtConfig({
+  ssr: true,
+  nitro: {
+    preset: 'netlify'
+  },
   app: {
     head: {
       title: 'SageX', // default fallback title

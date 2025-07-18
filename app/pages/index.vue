@@ -3,7 +3,7 @@
 
 </script>
 <template>
-    <h1>Home page</h1>
+    <h1>All Products</h1>
   <Table />
     <AddEditModal />
   </template>

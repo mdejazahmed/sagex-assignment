@@ -18,7 +18,7 @@ const remove = (id) => store.remove(id);
 const reset = () => store.reset();
 onMounted(async () => {
   const data = await $fetch("/api/products");
-  console.log(data);
+
   store.products = data;
 });
 </script>
