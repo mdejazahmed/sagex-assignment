@@ -31,6 +31,7 @@ export const useAppStore = defineStore("app", {
       };
     },
     add() {
+      this.isEditing = false;
       this.formModel = this.createNewRecord();
       this.dialog = true;
     },
@@ -50,39 +51,51 @@ export const useAppStore = defineStore("app", {
       this.dialog = true;
     },
     async remove(id) {
-     const deleted = await $fetch(`/api/products/${id}`, {
-        method: "DELETE",
-      });
-      const index = this.products.findIndex((book) => book.id === deleted.id);
-      this.products.splice(index, 1);
+      try {
+        const deleted = await $fetch(`/api/products/${id}`, {
+          method: "DELETE",
+        });
+        const index = this.products.findIndex((book) => book.id === deleted.id);
+        this.products.splice(index, 1);
+      } catch (error) {
+        console.log(error);
+      }
     },
     async save() {
       if (this.isEditing) {
-        const updatedProduct = await $fetch(
-          `/api/products/${this.formModel.id}`,
-          {
-            method: "PUT",
+        try {
+          const updatedProduct = await $fetch(
+            `/api/products/${this.formModel.id}`,
+            {
+              method: "PUT",
+              body: {
+                name: this.formModel.name,
+                price: this.formModel.price,
+                quantity: this.formModel.quantity,
+              },
+            }
+          );
+          const index = this.products.findIndex(
+            (book) => book.id === this.formModel.id
+          );
+          this.products[index] = updatedProduct;
+        } catch (error) {
+          console.log(error);
+        }
+      } else {
+        try {
+          const newProduct = await $fetch("/api/products", {
+            method: "POST",
             body: {
               name: this.formModel.name,
               price: this.formModel.price,
               quantity: this.formModel.quantity,
             },
-          }
-        );
-        const index = this.products.findIndex(
-          (book) => book.id === this.formModel.id
-        );
-        this.products[index] = updatedProduct;
-      } else {
-        const newProduct = await $fetch("/api/products", {
-          method: "POST",
-          body: {
-            name: this.formModel.name,
-            price: this.formModel.price,
-            quantity: this.formModel.quantity,
-          },
-        });
-        this.products.push(newProduct);
+          });
+          this.products.push(newProduct);
+        } catch (error) {
+          console.log(error);
+        }
       }
 
       this.dialog = false;

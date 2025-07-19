@@ -15,8 +15,8 @@ export interface Product {
       price: 10,
       quantity: 1,
       total_amount: 1960,
-      created_at: "2025-07-18",
-      updated_at: "2025-07-18",
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
     },
   ]
   

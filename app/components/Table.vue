@@ -16,11 +16,19 @@ const add = () => store.add();
 const edit = (id) => store.edit(id);
 const remove = (id) => store.remove(id);
 const reset = () => store.reset();
+const router = useRouter();
 onMounted(async () => {
-  const data = await $fetch("/api/products");
-
-  store.products = data;
+  try {
+    const data = await $fetch("/api/products");
+    store.products = data;
+  } catch (error) {
+    console.log(error);
+  }
 });
+const onRowDoubleClick = (event, { item }) => {
+
+  router.push(`/product/${item.id}`);
+};
 </script>
 <template>
   <v-toolbar flat>
@@ -44,6 +52,7 @@ onMounted(async () => {
     :hide-default-footer="store.products?.length < 11"
     :items="store.products"
     hover
+    @dblclick:row="onRowDoubleClick"
   >
     <template v-slot:top> </template>
 
